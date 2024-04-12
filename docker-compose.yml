@@ -34,12 +34,15 @@ services:
     environment:
       - HOSTNAME_EXTERNAL=localstack
       - LOCALSTACK_HOSTNAME=localstack
+      - SERVICES=events,kinesis,lambda,s3,logs,cloudwatch,sqs
       - DEBUG=0
       - DOCKER_HOST=unix:///var/run/docker.sock
       - PERSISTENCE=1
       - AWS_DEFAULT_REGION=us-east-1
       - AWS_ACCESS_KEY_ID=foo
       - AWS_SECRET_ACCESS_KEY=bar
+      - LAMBDA_EXECUTOR=docker
+      - LAMBDA_DOCKER_FLAGS="-e AWS_ENDPOINT_URL=http://localhost:4566 -e AWS_DEFAULT_REGION=us-east-1"
     healthcheck:
       test: >-
         curl -s localhost:4566/_localstack/init/ready | grep -q '\"completed\": true'
@@ -50,7 +53,8 @@ services:
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
       - ./.docker/localstack:/var/lib/localstack
-  
+      - ./scripts/localstack-kinesis-streams.sh:/etc/localstack/init/ready.d/localstack-kinesis-streams.sh
+
   debezium:
     image: quay.io/debezium/server:2.5.3.Final
     restart: always
