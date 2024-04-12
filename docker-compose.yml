@@ -1,0 +1,24 @@
+version: '3.9'
+
+services:
+  postgres:
+    image: postgres:13.6-alpine
+    restart: always
+    container_name: postgres
+    hostname: postgres
+    ports:
+      - 5439:5432
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: inventory_db
+    command: ["postgres", "-c", "config_file=/etc/postgresql/postgresql.conf"]
+    healthcheck:
+      test: ['CMD', 'psql', '-U', 'postgres', '-c', 'SELECT 1']
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    volumes:
+      - ./configs/postgres/postgresql.conf:/etc/postgresql/postgresql.conf
+      - ./scripts/inventory.sql:/docker-entrypoint-initdb.d/inventory.sql
+      - ./.docker/postgres:/var/lib/postgresql/data
