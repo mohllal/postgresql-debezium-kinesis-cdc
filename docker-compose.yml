@@ -32,8 +32,7 @@ services:
       - 4567:4566
       - '4610-4659:4510-4559'
     environment:
-      - HOSTNAME_EXTERNAL=localstack
-      - LOCALSTACK_HOSTNAME=localstack
+      - LOCALSTACK_HOST=localstack
       - SERVICES=events,kinesis,lambda,s3,logs,cloudwatch,sqs
       - DEBUG=0
       - DOCKER_HOST=unix:///var/run/docker.sock
@@ -43,6 +42,7 @@ services:
       - AWS_SECRET_ACCESS_KEY=bar
       - LAMBDA_EXECUTOR=docker
       - LAMBDA_DOCKER_FLAGS="-e AWS_ENDPOINT_URL=http://localhost:4566 -e AWS_DEFAULT_REGION=us-east-1"
+      - SQS_ENDPOINT_STRATEGY=path
     healthcheck:
       test: >-
         curl -s localhost:4566/_localstack/init/ready | grep -q '\"completed\": true'
@@ -58,6 +58,8 @@ services:
       - ./scripts/localstack-kinesis-streams.sh:/etc/localstack/init/ready.d/localstack-kinesis-streams.sh
       - ./scripts/localstack-lambda-function.sh:/etc/localstack/init/ready.d/localstack-lambda-function.sh
       - ./scripts/localstack-lambda-kinesis-esm.sh:/etc/localstack/init/ready.d/localstack-lambda-kinesis-esm.sh
+      - ./scripts/localstack-sqs-queue.sh:/etc/localstack/init/ready.d/localstack-sqs-queue.sh
+      - ./scripts/localstack-sqs-target-eventbridge.sh:/etc/localstack/init/ready.d/localstack-sqs-target-eventbridge.sh
 
   debezium:
     image: quay.io/debezium/server:2.5.3.Final
