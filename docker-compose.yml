@@ -53,8 +53,11 @@ services:
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
       - ./.docker/localstack:/var/lib/localstack
+      - ./lambda_function:/lambda
       - ./scripts/localstack-eventbridge-buses.sh:/etc/localstack/init/ready.d/localstack-eventbridge-buses.sh
       - ./scripts/localstack-kinesis-streams.sh:/etc/localstack/init/ready.d/localstack-kinesis-streams.sh
+      - ./scripts/localstack-lambda-function.sh:/etc/localstack/init/ready.d/localstack-lambda-function.sh
+      - ./scripts/localstack-lambda-kinesis-esm.sh:/etc/localstack/init/ready.d/localstack-lambda-kinesis-esm.sh
 
   debezium:
     image: quay.io/debezium/server:2.5.3.Final

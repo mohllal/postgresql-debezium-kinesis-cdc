@@ -187,4 +187,4 @@ pyrightconfig.json
 .devcontainer
 
 # Lambda package
-esm_lambda/*.zip
+lambda_function/*.zip
