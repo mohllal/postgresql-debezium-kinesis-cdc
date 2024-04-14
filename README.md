@@ -2,6 +2,8 @@
 
 This repo demonstrates the implementation of a Change Data Capture (CDC) pipeline.
 
+This repository contains the complete working code for the Medium article: [Change Data Capture (CDC) with PostgreSQL, Debezium, Kinesis, and EventBridge](https://medium.com/@mohllal/change-data-capture-cdc-with-debezium-kinesis-and-eventbridge-10eb5a996788).
+
 I am using:
 
 1. PostgreSQL database as the source.
@@ -159,6 +161,14 @@ while True:
         _delete_message(message.receipt_handle)
         logger.info("Message with id '%s' deleted successfully.", message.id)
 #...
+```
+
+Below are sample logs from the SQS consumer container, showcasing a change data event for an insert operation on the products table.
+
+```plaintext
+2024-04-13 23:13:56 21:13:56.908 [main] INFO consumer - Received event detail-type: ProductDataChangeEvent, source: kinesis.inventory.products
+2024-04-13 23:13:56 21:13:56.908 [main] INFO consumer - Data change event - before: None
+2024-04-13 23:13:56 21:13:56.909 [main] INFO consumer - Data change event - after: {'id': 101, 'name': 'scooter', 'description': 'Small 2-wheel scooter', 'created_at': 1712934636990657, 'modified_at': 1712934636990657}
 ```
 
 -----
